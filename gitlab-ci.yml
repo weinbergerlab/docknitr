@@ -16,16 +16,22 @@ stages:
     GITLAB_DOCKER_BUILD: ${CI_REGISTRY}/ci-utilities/ci-commands/gitlab-docker-build
     BUILD: ${CI_REGISTRY}/${CI_PROJECT_PATH}/build-ci:iid-${CI_PIPELINE_IID}
     R_BUILD_DIR: "build"
-  
-build-release:
-  extends: .r
   tags:
     - docker-cpu:4
-  stage: build
+    
+prebuild:
+  extends: .r
+  stage: prebuild
   script:
     - dind-run "${GITLAB_DOCKER_BUILD}" --cache-from master build --build-arg NCPUS="$(nproc --all)" .
+
+build-release:
+  extends: .r
+  stage: build
+  image: ${BUILD} # Have to run this directly inside the build image because it vignettes need access to docker
+  script:
     - mkdir -p "${R_BUILD_DIR}"
-    - dind-run "${BUILD}" Rscript -e "devtools::build(pkg = '.', path = '${R_BUILD_DIR}', vignettes = TRUE, binary = FALSE)"
+    - Rscript -e "devtools::build(pkg = '.', path = '${R_BUILD_DIR}', vignettes = TRUE, binary = FALSE)"
   artifacts:
     paths:
       - "${R_BUILD_DIR}/docknitr*.tar.gz"
