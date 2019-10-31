@@ -1,0 +1,157 @@
+---
+title: "docknitr: Making a Custom Image"
+author: "Ben Artin"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{2. Making a Custom Image}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Making custom images
+
+One of Docker's superpowers is the ability to easily make custom images. The full range of capabilities of custom Docker images is far beyond the scope of this documentation, but the short version is that to make a custom image you need to take two steps: first, you create a file ("Dockerfile") that contains instructions for how to build a custom image based on an existing image. 
+
+For example, the base Python image does not contain the `munch` Python package:
+
+````r
+`r ''````{r engine="docker", image="python:3", error=TRUE}
+import munch
+print(munch.__version__)
+`r ''````
+````
+
+```{r engine="docker", image="python:3", error=TRUE, echo=FALSE}
+import munch
+print(munch.__version__)
+```
+
+To create a custom image in which you have Python 3 with the `munch` Python package preinstalled, you might create a Dockerfile as follows:
+
+```{bash echo=FALSE, comment=""}
+cat python3-munch/Dockerfile
+```
+
+This file should be named `Dockerfile` and live in a folder by itself; let's call that folder `python3-munch`. You can think of a Dockerfile as computer-readable installation instructions.
+
+The second step is to turn these installation instructions into a Docker image, and tag this custom image using a Terminal command like this one:
+
+```{bash}
+docker build --tag python3-munch python3-munch
+```
+
+The first parameter is the tag you want to give your custom image, and the second is the name of the folder containing the Dockerfile. In our case, both are `python3-munch`.
+
+If you look through the output of that command, you will see that Docker creates a new image by starting from the existing `python:3` image, and then running the commands you gave it in the Dockerfile; the result of that process is saved under the tag you specified.
+
+Having done so, you can use your tagged custom image from Rmarkdown:
+
+````r
+`r ''````{r engine="docker", image="python3-munch"}
+import munch
+print(munch.__version__)
+`r ''````
+````
+
+```{r engine="docker", image="python3-munch", echo=FALSE}
+import munch
+print(munch.__version__)
+```
+
+## `pyseer`
+
+To give a less contrived example, let's make a custom image for `pyseer`, a genome-wide association studies Python package. If you look through `pyseer` documentation and tutorials, you will see that it relies heavily on Unix terminal commands (aka shell commands), so a good way to make this image would be to start with a Unix system, install `pyseer` in it, and then use a Unix shell (such as `bash`) to run `pyseer`. 
+
+How to work out the details of installing `pyseer` is beyond the scope of this vignette, but since I already worked out those details, I can share them with you in the form of a Dockerfile — and you can use this Dockerfile without deep knowledge of how I came up with it (it involved `pyseer` documentation, and frustration). Make a new folder named `pyseer`, and create a file named `Dockerfile` inside it with the following contents:
+
+```{bash echo=FALSE, comment=""}
+cat pyseer/Dockerfile
+```
+
+This Dockerfile starts from Ubuntu Linux (version 19.04), installs all the prerequisites of `pyseer` according to the `pyseer` installation instructions, and then installs `pyseer` itself.
+
+It also installs the `mash` utility (which the `pyseer` tutorial uses) and the `wget` utility (which is used to download the `pyseer` tutorial data files); these utilities could have been installed in their separate Docker images, but for the purpose of this exercise, that would have just added unnecessary complexity.s
+
+The main strength of using Docker for this kind of work is that a Dockerfile contains computer-readable installation instructions, and therefore it takes away all the problems of "did you follow the installation instructions correctly". Only one person needs to write a Dockerfile, which they can then share with others to let them install whatever software packages they all need to use.
+
+Build your new image and tag it with `pyseer`. This will take a few minutes — there's lots of downloading and installing to be done:
+
+```{bash}
+docker build --tag pyseer pyseer
+```
+
+Congratulations, you have pyseer! You can run it from RStudio:
+
+````r
+`r ''````{r engine="docker", image="pyseer", command="bash", share.files=TRUE}
+pyseer --version
+`r ''````
+````
+
+```{r engine="docker", image="pyseer", command="bash", share.files=TRUE}
+pyseer --version
+```
+
+While we are here, let's make an alias for it:
+
+```{r}
+docknitr::docker_alias("pyseer", image="pyseer", command="bash", share.files=TRUE)
+```
+
+Your next step is probably to run the pyseer tutorial. You can now run the following code (using the `pyseer` Docker image) to download `pyseer_tutorial.tar.bz2` and extract the data files (which takes a while):
+
+````r
+`r ''````{r engine="pyseer"}
+mkdir pyseer-tutorial
+cd pyseer-tutorial
+wget --continue --no-verbose --output-document=pyseer_tutorial.tar.bz2 https://ndownloader.figshare.com/files/14091179
+tar xvf pyseer_tutorial.tar.bz2
+mkdir assemblies
+cd assemblies
+tar xf ../assemblies.tar.bz2
+`r ''````
+````
+
+```{r engine="pyseer", echo=FALSE}
+mkdir pyseer-tutorial
+cd pyseer-tutorial
+wget --continue --no-verbose --output-document=pyseer_tutorial.tar.bz2 https://ndownloader.figshare.com/files/14091179
+tar xvf pyseer_tutorial.tar.bz2
+mkdir assemblies
+cd assemblies
+tar xf ../assemblies.tar.bz2
+```
+
+Now you're finally ready to run the first step of data analysis, again using the `pyseer` image in Docker:
+
+````r
+`r ''````{r engine="pyseer"}
+cd pyseer-tutorial
+mash sketch -s 10000 -o mash_sketch assemblies/*.fa
+mash dist mash_sketch.msh mash_sketch.msh| square_mash > mash.tsv
+scree_plot_pyseer mash.tsv
+`r ''````
+````
+
+```{r engine="pyseer", echo=FALSE}
+cd pyseer-tutorial
+mash sketch -s 10000 -o mash_sketch assemblies/*.fa
+mash dist mash_sketch.msh mash_sketch.msh| square_mash > mash.tsv
+scree_plot_pyseer mash.tsv
+```
+
+And now you have a scree plot!
+
+```{r echo=FALSE, fig.cap="Scree plot from pyseer", out.width = '100%'}
+knitr::include_graphics("pyseer-tutorial/scree_plot.png")
+```
+
+The remainder of the `pyseer` tutorial is left as an exercise for the reader 🙂

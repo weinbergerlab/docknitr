@@ -1,0 +1,180 @@
+---
+title: "docknitr: Using Docker in Rmarkdown"
+author: "Ben Artin"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{1. Using Docker in Rmarkdown}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+You probably already know that R is not the only language you can use in an Rmarkdown file. For example, if you had Python and the R `reticulate` package installed, you could write
+
+````r
+`r ''````{python}
+print("Python in Rmarkdown")
+`r ''````
+````
+
+But that probably doesn't work because getting Python connected to R this way requires installing additional packages.
+
+Besides that problem, this approach also runs into limitations if you have multiple R projects, each with its own special requirements for outside software. For example, if you have one project that requires Python v3.5 with package X installed, and another that requires Python v3.4 with package Y installed, you will very quickly find yourself managing a rat's nest of dependencies.
+
+Docker is a tool that helps with this problem. In short, Docker lets you create a separate environment for each of your projects, with different software installed in each environment. The environment are isolated from each other, so your different projects don't collide with each other. 
+
+This is similar to virtualization done by Virtual Box, VMWare Fusion, or other similar software. However, Docker is structure up in a way that can be easily integrated with Rmarkdown, making it a much better tool for integrating other software into your Rmarkdown documents.
+
+## Getting started
+
+To begin with, you need to install Docker from [the official site](https://www.docker.com/get-started). After you install it, make sure that it is working properly by running the following in your terminal:
+
+```{bash}
+docker run python:3 python -c 'print("Python in Docker")'
+```
+
+The output you see shows Docker downloading a pre-made copy of Python 3 (regardless of which operating system you are on and which version of Python you already have installed outside of Docker) and then running some Python code in it to print "Python in Docker".
+
+If you repeat the same command for a second time, Docker will use the already-downloaded Python and just run your code:
+
+```{bash}
+docker run python:3 python -c 'print("Python in Docker")'
+```
+
+Docker's name for a packaged software environment is *Docker image*. For example, the thing that got downloaded above when you ran Python in Docker was the Python 3 image. Images have tags of the form of `software:version`; for example, `python:3` is the tag that we used above to tell Docker to download Python version 3. 
+
+All the images are isolated from each other — for example, Python version or Python packages available in one image have no bearing on those installed in another image.
+
+Running a docker image creates new session called a *Docker container*. Just as you can have multiple RStudio sessions running at the same time on your computer, you can run multiple Docker containers from the same Docker image (or from different images).
+
+All the containers are also isolated from each other — for example, files created by one container are (by default) not visible to other containers. 
+
+In other words, you can think of a docker image as a pre-built collection of software, and a docker container as an isolated session in which you run that collection of software.
+
+## Using docker with Rmarkdown
+
+The actual thing we are interested in here is using Docker from inside Rmarkdown. To do this, you first have to load the `docknitr` package:
+
+```{r}
+library(docknitr)
+```
+
+Doing this enables `docker` as an option inside Rmarkdown. Let's run some Python code in Rmarkdown using docker:
+
+````r
+`r ''````{r engine="docker", image="python:3"}
+import sys
+print("Python in Docker in Rmarkdown, version %s" % sys.version)
+`r ''````
+````
+
+```{r engine="docker", echo=FALSE, image="python:3"}
+import sys
+print("Python in Docker in Rmarkdown, version %s" % sys.version)
+```
+
+What if we want to use Python v2 instead? Easy:
+
+````r
+`r ''````{r engine="docker", image="python:2"}
+import sys
+print("Python in Docker in Rmarkdown, version %s" % sys.version)
+`r ''````
+````
+
+```{r engine="docker", echo=FALSE, image="python:2"}
+import sys
+print("Python in Docker in Rmarkdown, version %s" % sys.version)
+```
+
+If you've ever tried to install multiple versions of Python on one computer, you can appreciate how unexpectedly simple this was. (If you haven't, lucky you.)
+
+### Technical details
+
+Under the hood, `docknitr` uses `system2()` to run `docker run --interactive IMAGE`, and passes the code chunk on the standard input. The standard output is then returned in Rmarkdown output.
+
+## File sharing
+
+Normally, docker containers are isolated from each other and from the rest of your computer. As a result, they don't have access to files on your computer. For example, this is the list of files seen by Python in Docker:
+
+````r
+`r ''````{r engine="docker", image="python:3"}
+import os
+print(os.listdir())
+`r ''````
+````
+
+```{r engine="docker", echo=FALSE, image="python:3"}
+import os
+print(os.listdir())
+```
+
+These files aren't anywhere (obvious) on your computer — they are *inside the Python 3 Docker image*.
+
+If you want your Rmarkdown Docker blocks to see the normal files on your computer, use the `share.files=TRUE` block option to share your RStudio working directory with the Docker image:
+
+````r
+`r ''````{r engine="docker", image="python:3", share.files=TRUE}
+import os
+print(os.listdir())
+`r ''````
+````
+
+```{r engine="docker", echo=FALSE, image="python:3", share.files=TRUE}
+import os
+print(os.listdir())
+```
+
+### Technical details
+
+Under the hood, `share.files` adds a bind-mount of the current working directory to `/workdir` on the Docker container, and sets `/workdir` as the working directory of the container.
+
+## Docker image commands
+
+Whereas some Docker images (such as `python`) contain a single piece of software, some others contain multiple tools, and therefore require you to specify which you want to run. A common example are operating system images (such as the `ubuntu` image for Ubuntu Linux). For example, if you want to have access to all the tools built into Ubuntu, you would want to use the `ubuntu` image; if you want to run a particular Rmarkdown block through `bash` (which is one of the tools included in Ubuntu), you can use the `command` block option:
+
+````r
+`r ''````{r engine="docker", image="ubuntu:latest", command="bash", share.files=TRUE}
+ls
+`r ''````
+````
+
+```{r engine="docker", echo=FALSE, image="ubuntu:latest", command="bash", share.files=TRUE}
+ls
+```
+
+Let's take a moment to pause here and appreciate what just happened there: your computer — regardless of what operating system is installed on it — downloaded a copy of Ubuntu Linux, ran it inside an isolated session that was given access to your R files, ran a Linux command inside that session, and fed the output of that command into your Rmarkdown file. 
+
+## Shorthands
+
+You will probably find yourself frequently using the same Docker images and commands over and over again. For example, you may have multiple Rmarkdown blocks that you want to run in Python, without having to repeat the Python Docker image tag every time.
+
+To accomplish this, use `docknitr::docker_alias`. For example, run this to configure `engine='python-docker'` as shorthand for `engine='docker', image="python:3", share.files=TRUE`:
+
+```{r}
+docknitr::docker_alias("python-docker", image="python:3", share.files=TRUE)
+```
+
+Now you can use `python-docker` as its own Rmarkdown chunk type:
+
+````r
+`r ''````{r engine="python-docker"}
+import os
+print(os.listdir())
+`r ''````
+````
+
+
+```{r engine="python-docker", echo=FALSE}
+import os
+print(os.listdir())
+```
+
+That covers the basics of getting up-and-running with Docker in Rmarkdown. This much will be useful to you if you want to run code through existing software environments, such as the plain install of Python 3. The next level of Docker power is making your custom software environments. When you are ready for that, check out the [custom images](custom-images.html) vignette.
