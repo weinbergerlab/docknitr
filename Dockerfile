@@ -5,6 +5,19 @@ RUN mkdir -p /usr/local/lib/R/etc
 ARG NCPUS=1
 RUN echo "options(Ncpus = ${NCPUS})" >> "/usr/local/lib/R/etc/Rprofile.site"
 
+# Install docker cli
+RUN apt-get update && apt-get install --yes --no-install-recommends \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg \
+    gnupg-agent \
+    software-properties-common
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+RUN add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
+RUN apt-get update && apt-get install --yes --no-install-recommends docker-ce-cli
+
 # Install development deps
 RUN apt-get update && \
   apt-get install --yes --no-install-recommends \
@@ -19,5 +32,5 @@ RUN apt-get update && \
 RUN mkdir /build
 RUN Rscript -e "install.packages('devtools')"
 COPY DESCRIPTION /build
-RUN cd /build && Rscript -e "install.packages('devtools'); devtools::install_dev_deps()"
+RUN cd /build && Rscript -e "devtools::install_dev_deps()"
 
