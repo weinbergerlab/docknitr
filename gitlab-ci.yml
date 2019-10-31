@@ -1,3 +1,8 @@
+stages:
+  - prebuild
+  - build
+  - check
+
 .docker:
   tags:
     - docker
@@ -5,14 +10,6 @@
   services:
     - docker:19.03.1-dind
     
-stages:
-  - autodocker
-  - build
-  - pages
-  - check
-
-variables:
-  
 .r:
   extends: .docker
   variables: 
