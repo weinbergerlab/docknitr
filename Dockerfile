@@ -13,7 +13,9 @@ RUN apt-get update && \
     libgit2-dev \
     libssl-dev \
     libssh2-1-dev \
-    libxml2-dev
+    libxml2-dev \
+    pandoc \
+    pandoc-citeproc
 RUN mkdir /build
 RUN Rscript -e "install.packages('devtools')"
 COPY DESCRIPTION /build
