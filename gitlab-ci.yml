@@ -1,0 +1,44 @@
+.docker:
+  tags:
+    - docker
+  image: ${CI_REGISTRY}/ci-utilities/ci-commands/dind-ci
+  services:
+    - docker:19.03.1-dind
+    
+stages:
+  - autodocker
+  - build
+  - pages
+  - check
+
+variables:
+  
+.r:
+  extends: .docker
+  variables: 
+    GITLAB_DOCKER_BUILD: ${CI_REGISTRY}/ci-utilities/ci-commands/gitlab-docker-build
+    BUILD: ${CI_REGISTRY}/${CI_PROJECT_PATH}/build-ci:iid-${CI_PIPELINE_IID}
+    R_BUILD_DIR: "build"
+  
+build-release:
+  extends: .r
+  tags:
+    - docker-cpu:4
+  stage: build
+  script:
+    - dind-run "${GITLAB_DOCKER_BUILD}" --cache-from master build --build-arg NCPUS="$(nproc --all)" .
+    - mkdir -p "${R_BUILD_DIR}"
+    - dind-run "${BUILD}" Rscript -e "devtools::build(pkg = '.', path = '${R_BUILD_DIR}', vignettes = TRUE, binary = FALSE)"
+  artifacts:
+    paths:
+      - "${R_BUILD_DIR}/docknitr*.tar.gz"
+    when: always
+
+check-release:
+  extends: .r
+  tags:
+    - docker-mem:4 # True story: R cmd check fails if you use more than 2 CPUs
+  stage: check
+  script:
+    - dind-run "${BUILD}" Rscript -e "devtools::check_built(path = paste0('${R_BUILD_DIR}/', list.files('${R_BUILD_DIR}', pattern='docknitr.*t.*gz')[1]))"
+    
