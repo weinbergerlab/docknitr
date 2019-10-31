@@ -29,6 +29,8 @@ build-release:
   extends: .r
   stage: build
   image: ${BUILD} # Have to run this directly inside the build image because it vignettes need access to docker
+  variables:
+    DOCKER_HOST: tcp://docker:2375
   script:
     - mkdir -p "${R_BUILD_DIR}"
     - Rscript -e "devtools::build(pkg = '.', path = '${R_BUILD_DIR}', vignettes = TRUE, binary = FALSE)"
