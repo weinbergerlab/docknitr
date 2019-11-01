@@ -9,6 +9,16 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+<!--
+### IMPORTANT
+
+Do not use the this Rmarkdown file as an example of how to use Docker in R! Look at the vignette instead:
+
+vignette("custom-images", "docknitr")
+
+This source file has all sorts of Rmarkdown-inside-Rmarkdown and Docker-inside-Docker shenanigans that will make your life confusing.
+-->
+
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -149,10 +159,16 @@ mash dist mash_sketch.msh mash_sketch.msh| square_mash > mash.tsv
 scree_plot_pyseer mash.tsv
 ```
 
+```{r engine="bash", include=FALSE}
+# Docker-in-docker shenanigans
+docker run -i -v "$(pwd):/workdir" --workdir /workdir pyseer tar -czf - . | tar -xvzf -
+```
+
 And now you have a scree plot!
 
-```{r echo=FALSE, fig.cap="Scree plot from pyseer", out.width = '100%'}
+```{r fig.cap="Scree plot from pyseer", out.width = '100%'}
 knitr::include_graphics("pyseer-tutorial/scree_plot.png")
 ```
+
 
 The remainder of the `pyseer` tutorial is left as an exercise for the reader 🙂

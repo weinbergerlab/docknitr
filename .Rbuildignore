@@ -3,3 +3,4 @@
 ^vignettes/pyseer-tutorial/.*$
 ^doc$
 ^Meta$
+^build$
