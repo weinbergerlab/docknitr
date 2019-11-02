@@ -47,6 +47,7 @@ This is similar to virtualization done by Virtual Box, VMWare Fusion, or other s
 To begin with, you need to install Docker from [the official site](https://www.docker.com/get-started). After you install it, make sure that it is working properly by running the following in your terminal:
 
 ```{bash}
+docker rmi python:3
 docker run python:3 python -c 'print("Python in Docker")'
 ```
 
