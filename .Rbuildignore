@@ -3,3 +3,8 @@
 ^vignettes/pyseer-tutorial/.*$
 ^doc$
 ^Meta$
+^build$
+^gitlab-ci\.yml$
+^\.dockerignore$
+^Dockerfile$
+

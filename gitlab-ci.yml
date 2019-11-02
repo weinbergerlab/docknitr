@@ -1,0 +1,49 @@
+stages:
+  - prebuild
+  - build
+  - check
+
+.docker:
+  tags:
+    - docker
+  image: ${CI_REGISTRY}/ci-utilities/ci-commands/dind-ci
+  services:
+    - docker:19.03.1-dind
+    
+.r:
+  extends: .docker
+  variables: 
+    GITLAB_DOCKER_BUILD: ${CI_REGISTRY}/ci-utilities/ci-commands/gitlab-docker-build
+    BUILD: ${CI_REGISTRY}/${CI_PROJECT_PATH}/build-ci:iid-${CI_PIPELINE_IID}
+    R_BUILD_DIR: "build"
+  tags:
+    - docker-cpu:4
+    
+prebuild:
+  extends: .r
+  stage: prebuild
+  script:
+    - dind-run "${GITLAB_DOCKER_BUILD}" --cache-from master build --build-arg NCPUS="$(nproc --all)" .
+
+build-release:
+  extends: .r
+  stage: build
+  script:
+    - mkdir -p "${R_BUILD_DIR}"
+    - docker login -u gitlab-ci-token -p "${CI_BUILD_TOKEN}" "${CI_REGISTRY_IMAGE}"
+    - dind-run "${BUILD}" env TMPDIR=tmp Rscript -e "devtools::document(); devtools::build(path = '${R_BUILD_DIR}')"
+  artifacts:
+    paths:
+      - "${R_BUILD_DIR}/docknitr*.tar.gz"
+    when: always
+
+check-release:
+  extends: .r
+  tags:
+    - docker-cpu:4
+  stage: check
+  script:
+    # True story: R cmd check fails if you use more than 2 CPUs
+    - docker login -u gitlab-ci-token -p "${CI_BUILD_TOKEN}" "${CI_REGISTRY_IMAGE}"
+    - dind-run "${BUILD}" Rscript -e "devtools::check_built(path = paste0('${R_BUILD_DIR}/', list.files('${R_BUILD_DIR}', pattern='docknitr.*t.*gz')[1]))"
+    

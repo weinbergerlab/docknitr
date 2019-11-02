@@ -9,6 +9,16 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+<!--
+### IMPORTANT
+
+Do not use the this Rmarkdown file as an example of how to use Docker in R! Look at the vignette instead:
+
+vignette("docknitr", "docknitr")
+
+This source file has all sorts of Rmarkdown-inside-Rmarkdown and Docker-inside-Docker shenanigans that will make your life confusing.
+-->
+
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,

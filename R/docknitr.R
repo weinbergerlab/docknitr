@@ -33,6 +33,18 @@ docker_engine = function(options) {
   knitr::engine_output(options, options$code, output)
 }
 
+#' Create an alias for a Docker Rmarkdown engine
+#'
+#' After writing
+#'
+#' docker_alias("ubuntu", image="ubuntu:latest", command="bash")
+#'
+#' you can use ```{r engine="ubuntu"} to process Rmarkdown chunks through Ubuntu bash using Docker
+#'
+#' @param name The name of a new Docker Rmarkdown engine
+#' @param ... options for the new Docker Rmarkdown engine
+#' @examples
+#' docker_alias("ubuntu", image="ubuntu:latest", command="bash")
 #' @export
 docker_alias = function(name, ...) {
   alias_engine = list()
