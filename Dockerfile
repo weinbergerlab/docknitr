@@ -23,7 +23,8 @@ RUN apt-get update && \
     libssh2-1-dev \
     libxml2-dev \
     pandoc \
-    pandoc-citeproc
+    pandoc-citeproc \
+    qpdf
 RUN mkdir /build
 RUN Rscript -e "install.packages('devtools')"
 COPY DESCRIPTION /build
