@@ -40,6 +40,9 @@ print(munch.__version__)
 `r ''````
 ````
 
+```{r error=TRUE, engine="docker", image="python:3", include=FALSE}
+```
+
 ```{r engine="docker", image="python:3", error=TRUE, echo=FALSE}
 import munch
 print(munch.__version__)

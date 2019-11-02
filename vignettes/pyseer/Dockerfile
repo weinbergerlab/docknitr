@@ -1,5 +1,5 @@
 FROM ubuntu:19.04
-RUN apt-get update --quiet && apt-get install --quiet --yes --no-install-recommends \
+RUN apt-get -qq update && apt-get -qq install --yes --no-install-recommends \
   wget \
   python3-setuptools \
   python3-wheel \
