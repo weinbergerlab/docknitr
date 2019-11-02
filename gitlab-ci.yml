@@ -40,9 +40,10 @@ build-release:
 check-release:
   extends: .r
   tags:
-    - docker-mem:4 # True story: R cmd check fails if you use more than 2 CPUs
+    - docker-cpu:4
   stage: check
   script:
+    # True story: R cmd check fails if you use more than 2 CPUs
     - docker login -u gitlab-ci-token -p "${CI_BUILD_TOKEN}" "${CI_REGISTRY_IMAGE}"
     - dind-run "${BUILD}" Rscript -e "devtools::check_built(path = paste0('${R_BUILD_DIR}/', list.files('${R_BUILD_DIR}', pattern='docknitr.*t.*gz')[1]))"
     
