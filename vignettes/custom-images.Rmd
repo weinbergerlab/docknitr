@@ -29,7 +29,7 @@ library(docknitr)
 
 ## Making custom images
 
-One of Docker's superpowers is the ability to easily make custom images. The full range of capabilities of custom Docker images is far beyond the scope of this documentation, but the short version is that to make a custom image you need to take two steps: first, you create a file ("Dockerfile") that contains instructions for how to build a custom image based on an existing image. 
+One of Docker's superpowers is the ability to easily make custom images. The full range of capabilities of custom Docker images is far beyond the scope of this documentation, but the short version is that to make a custom image you need to take two steps: first, you create a file ( called *Dockerfile*) that contains instructions for how to build a custom image based on an existing image. 
 
 For example, the base Python image does not contain the `munch` Python package:
 
@@ -107,7 +107,7 @@ pyseer --version
 `r ''````
 ````
 
-```{r engine="docker", image="pyseer", command="bash", share.files=TRUE}
+```{r engine="docker", image="pyseer", command="bash", share.files=TRUE, echo=FALSE}
 pyseer --version
 ```
 
@@ -155,7 +155,7 @@ scree_plot_pyseer mash.tsv
 ```{r engine="pyseer", echo=FALSE}
 cd pyseer-tutorial
 mash sketch -s 10000 -o mash_sketch assemblies/*.fa
-mash dist mash_sketch.msh mash_sketch.msh| square_mash > mash.tsv
+mash dist mash_sketch.msh mash_sketch.msh | square_mash > mash.tsv
 scree_plot_pyseer mash.tsv
 ```
 
