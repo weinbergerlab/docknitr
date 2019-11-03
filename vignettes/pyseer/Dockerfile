@@ -9,5 +9,6 @@ RUN apt-get -qq update && apt-get -qq install --yes --no-install-recommends \
   python3-statsmodels \
   python3-pysam \
   python3-pybedtools \
-  mash
+  mash \
+  > /dev/null
 RUN pip3 install pyseer
