@@ -56,7 +56,7 @@ cat python3-munch/Dockerfile
 
 This file should be named `Dockerfile` and live in a folder by itself; let's call that folder `python3-munch`. You can think of a Dockerfile as computer-readable installation instructions.
 
-The second step is to turn these installation instructions into a Docker image, and tag this custom image using a Terminal command like this one:
+The second step is to turn these installation instructions into a Docker image, and tag this custom image. This is accomplished using a Terminal command like this one:
 
 ```{bash}
 docker build --tag python3-munch python3-munch

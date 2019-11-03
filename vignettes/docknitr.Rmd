@@ -40,7 +40,7 @@ Besides that problem, this approach also runs into limitations if you have multi
 
 Docker is a tool that helps with this problem. In short, Docker lets you create a separate environment for each of your projects, with different software installed in each environment. The environment are isolated from each other, so your different projects don't collide with each other. 
 
-This is similar to virtualization done by Virtual Box, VMWare Fusion, or other similar software. However, Docker is structure up in a way that can be easily integrated with Rmarkdown, making it a much better tool for integrating other software into your Rmarkdown documents.
+This is similar to virtualization done by Virtual Box, VMWare Fusion, or other similar software. However, Docker is structured in a way that can be easily integrated with Rmarkdown, making it a much better tool for integrating other software into your Rmarkdown documents.
 
 ## Getting started
 
@@ -59,11 +59,11 @@ If you repeat the same command for a second time, Docker will use the already-do
 docker run python:3 python -c 'print("Python in Docker")'
 ```
 
-Docker's name for a packaged software environment is *Docker image*. For example, the thing that got downloaded above when you ran Python in Docker was the Python 3 image. Images have tags of the form of `software:version`; for example, `python:3` is the tag that we used above to tell Docker to download Python version 3. 
+Docker's name for a packaged software environment is *Docker image*. For example, the thing that got downloaded above when you ran Python in Docker was the Python 3 image. Images have tags of the form of `software:version` — for example, `python:3` is the tag that we used above to tell Docker to download Python version 3. 
 
 All the images are isolated from each other — for example, Python version or Python packages available in one image have no bearing on those installed in another image.
 
-Running a docker image creates new session called a *Docker container*. Just as you can have multiple RStudio sessions running at the same time on your computer, you can run multiple Docker containers from the same Docker image (or from different images).
+Running a docker image creates new session called a *Docker container*. Just as you can have multiple RStudio sessions running at the same time on your computer, you can run multiple Docker containers at the same time (from the same Docker image, or from different images).
 
 All the containers are also isolated from each other — for example, files created by one container are (by default) not visible to other containers. 
 
@@ -141,6 +141,8 @@ print(os.listdir())
 ```{r engine="docker", echo=FALSE, image="python:3", share.files=TRUE}
 import os
 print(os.listdir())
+
+That list of files is what's on my computer; yours would probably be different.
 ```
 
 ### Technical details
@@ -165,7 +167,7 @@ Let's take a moment to pause here and appreciate what just happened there: your 
 
 ## Shorthands
 
-You will probably find yourself frequently using the same Docker images and commands over and over again. For example, you may have multiple Rmarkdown blocks that you want to run in Python, without having to repeat the Python Docker image tag every time.
+You will probably find yourself frequently using the same Docker images and commands over and over again. For example, you may have multiple Rmarkdown blocks that you want to run in Python, without having to repeat the Python Docker options every time.
 
 To accomplish this, use `docknitr::docker_alias`. For example, run this to configure `engine='python-docker'` as shorthand for `engine='docker', image="python:3", share.files=TRUE`:
 
