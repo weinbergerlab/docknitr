@@ -173,7 +173,7 @@ docker rmi --force ubuntu:latest
 ```
 
 ```{r engine="docker", echo=FALSE, image="ubuntu:latest", command="bash", share.files=TRUE}
-ls
+uname -a
 ```
 
 Let's take a moment to pause here and appreciate what just happened there: your computer — regardless of what operating system is installed on it — downloaded a copy of Ubuntu Linux, ran it inside an isolated session that was given access to your R files, ran a Linux command inside that session, and fed the output of that command into your Rmarkdown file. 
