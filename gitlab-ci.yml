@@ -40,7 +40,7 @@ build-release:
     - mv doc/*.html vignettes
     - rm -rf doc
     - mv vignettes-asis/*.asis vignettes
-    - "sed -i '' 's/VignetteBuilder: knitr/VignetteBuilder: R.rsp/' DESCRIPTION"
+    - "sed -i 's/VignetteBuilder: knitr/VignetteBuilder: R.rsp/' DESCRIPTION"
     - dind-run "${BUILD}" Rscript -e "devtools::build(path = '${R_BUILD_DIR}')"
     - mv "${R_BUILD_DIR}"/docknitr*.tar.gz .
   artifacts:
