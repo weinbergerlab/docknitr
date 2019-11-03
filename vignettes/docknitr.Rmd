@@ -176,7 +176,7 @@ docker rmi --force ubuntu:latest
 uname -a
 ```
 
-Let's take a moment to pause here and appreciate what just happened there: your computer — regardless of what operating system is installed on it — downloaded a copy of Ubuntu Linux, ran it inside an isolated session that was given access to your R files, ran a Linux command inside that session, and fed the output of that command into your Rmarkdown file. 
+Let's take a moment to pause here and appreciate what just happened there: your computer — regardless of what operating system is installed on it — downloaded a copy of Ubuntu Linux, started it inside an isolated session, fed a chunk of your Rmarkdown file into a Linux command inside that session, and fed the output of that command into your Rmarkdown file. 
 
 ## Shorthands
 
