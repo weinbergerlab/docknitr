@@ -141,9 +141,9 @@ print(os.listdir())
 ```{r engine="docker", echo=FALSE, image="python:3", share.files=TRUE}
 import os
 print(os.listdir())
+```
 
 That list of files is what's on my computer; yours would probably be different.
-```
 
 ### Technical details
 
