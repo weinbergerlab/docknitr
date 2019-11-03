@@ -105,7 +105,6 @@ print("Python in Docker in Rmarkdown, version %s" % sys.version)
 
 ```{bash include = FALSE}
 docker pull python:2
-docker rmi --force python:2
 ```
 
 ```{r engine="docker", echo=FALSE, image="python:2"}
@@ -169,7 +168,6 @@ uname -a
 
 ```{bash include = FALSE}
 docker pull ubuntu:latest
-docker rmi --force ubuntu:latest
 ```
 
 ```{r engine="docker", echo=FALSE, image="ubuntu:latest", command="bash"}
