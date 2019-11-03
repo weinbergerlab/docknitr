@@ -162,7 +162,7 @@ Under the hood, `share.files` adds a bind-mount of the current working directory
 Whereas some Docker images (such as `python`) contain a single piece of software, some others contain multiple tools, and therefore require you to specify which you want to run. This is common for images that contain an entire operating system (such as the `ubuntu` image for Ubuntu Linux), or images that contain a suite of related tools. For example, if you want to have access to all the tools built into Ubuntu, you would want to use the `ubuntu` image; if you want to run a particular Rmarkdown block through `bash` (which is one of the tools included in Ubuntu), you can use the `command` block option:
 
 ````r
-`r ''````{r engine="docker", image="ubuntu:latest", command="bash", share.files=TRUE}
+`r ''````{r engine="docker", image="ubuntu:latest", command="bash"}
 uname -a
 `r ''````
 ````
@@ -172,7 +172,7 @@ docker pull ubuntu:latest
 docker rmi --force ubuntu:latest
 ```
 
-```{r engine="docker", echo=FALSE, image="ubuntu:latest", command="bash", share.files=TRUE}
+```{r engine="docker", echo=FALSE, image="ubuntu:latest", command="bash"}
 uname -a
 ```
 
