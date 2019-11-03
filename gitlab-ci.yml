@@ -45,5 +45,5 @@ check-release:
   stage: check
   script:
     - docker login -u gitlab-ci-token -p "${CI_BUILD_TOKEN}" "${CI_REGISTRY_IMAGE}"
-    - dind-run "${BUILD}" Rscript -e "devtools::check_built(path = paste0('${R_BUILD_DIR}/', list.files('.', pattern='docknitr.*t.*gz')[1]))"
+    - dind-run "${BUILD}" Rscript -e "devtools::check_built(path = list.files('.', pattern='docknitr.*t.*gz')[1])"
     
