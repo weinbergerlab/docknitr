@@ -40,6 +40,10 @@ print(munch.__version__)
 `r ''````
 ````
 
+```{bash include = FALSE}
+docker pull python:3
+```
+
 ```{r engine="docker", image="python:3", error=TRUE, echo=FALSE}
 import munch
 print(munch.__version__)
@@ -53,7 +57,7 @@ cat python3-munch/Dockerfile
 
 This file should be named `Dockerfile` and live in a folder by itself; let's call that folder `python3-munch`. You can think of a Dockerfile as computer-readable installation instructions.
 
-The second step is to turn these installation instructions into a Docker image, and tag this custom image using a Terminal command like this one:
+The second step is to turn these installation instructions into a Docker image, and tag this custom image. This is accomplished using a Terminal command like this one:
 
 ```{bash}
 docker build --tag python3-munch python3-munch
@@ -94,6 +98,10 @@ It also installs the `mash` utility (which the `pyseer` tutorial uses) and the `
 The main strength of using Docker for this kind of work is that a Dockerfile contains computer-readable installation instructions, and therefore it takes away all the problems of "did you follow the installation instructions correctly". Only one person needs to write a Dockerfile, which they can then share with others to let them install whatever software packages they all need to use.
 
 Build your new image and tag it with `pyseer`. This will take a few minutes — there's lots of downloading and installing to be done:
+
+```{bash include = FALSE}
+docker pull ubuntu:19.04
+```
 
 ```{bash}
 docker build --tag pyseer pyseer

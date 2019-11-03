@@ -1,7 +1,7 @@
 Package: docknitr
 Type: Package
 Title: Use Docker Images To Process Rmarkdown Blocks
-Version: 0.1.0
+Version: 0.3.0
 Author: Ben Artin
 Maintainer: Ben Artin <ben@artins.org>
 Description: This package gives you the ability to use arbitrary Docker images
