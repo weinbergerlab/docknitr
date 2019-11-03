@@ -167,6 +167,11 @@ uname -a
 `r ''````
 ````
 
+```{bash include = FALSE}
+docker pull ubuntu:latest
+docker rmi --force ubuntu:latest
+```
+
 ```{r engine="docker", echo=FALSE, image="ubuntu:latest", command="bash", share.files=TRUE}
 ls
 ```
