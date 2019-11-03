@@ -32,7 +32,7 @@ build-release:
     - mkdir -p "${R_BUILD_DIR}"
     - docker login -u gitlab-ci-token -p "${CI_BUILD_TOKEN}" "${CI_REGISTRY_IMAGE}"
     - dind-run "${BUILD}" env TMPDIR=tmp Rscript -e "devtools::document(); devtools::build(path = '${R_BUILD_DIR}')"
-    - mv "${R_BUILD_DIR}/docknitr*.tar.gz" .
+    - mv "${R_BUILD_DIR}"/docknitr*.tar.gz .
   artifacts:
     paths:
       - "docknitr*.tar.gz"
