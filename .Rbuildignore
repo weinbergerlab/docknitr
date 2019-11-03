@@ -1,6 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^vignettes/pyseer-tutorial/.*$
+^vignettes/.*$
 ^doc$
 ^Meta$
 ^rbuild$
