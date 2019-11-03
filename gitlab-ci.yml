@@ -31,7 +31,17 @@ build-release:
   script:
     - mkdir -p "${R_BUILD_DIR}"
     - docker login -u gitlab-ci-token -p "${CI_BUILD_TOKEN}" "${CI_REGISTRY_IMAGE}"
-    - dind-run "${BUILD}" env TMPDIR=tmp Rscript -e "devtools::document(); devtools::build(path = '${R_BUILD_DIR}')"
+    # Shenanigans: build vignettes with rmarkdown (which creates the vignette output files)
+    # Then replace vignette sources with built output files before building the package,
+    # so that future attempts at rebuilding vignettes (such as by CRAN) will not require docker
+    - dind-run "${BUILD}" Rscript -e "devtools::document()"
+    - dind-run "${BUILD}" Rscript -e "devtools::build_vignettes()"
+    - rm vignettes/*.Rmd
+    - mv doc/*.html vignettes
+    - rm -rf doc
+    - mv vignettes-asis/*.asis vignettes
+    - sed -i '' 's/VignetteBuilder: knitr/VignetteBuilder: R.rsp/' DESCRIPTION
+    - dind-run "${BUILD}" Rscript -e "devtools::build(path = '${R_BUILD_DIR}')"
     - mv "${R_BUILD_DIR}"/docknitr*.tar.gz .
   artifacts:
     paths:
