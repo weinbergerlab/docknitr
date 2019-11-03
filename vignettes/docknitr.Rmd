@@ -155,7 +155,7 @@ Whereas some Docker images (such as `python`) contain a single piece of software
 
 ````r
 `r ''````{r engine="docker", image="ubuntu:latest", command="bash", share.files=TRUE}
-ls
+uname -a
 `r ''````
 ````
 
