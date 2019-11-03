@@ -100,7 +100,7 @@ The main strength of using Docker for this kind of work is that a Dockerfile con
 Build your new image and tag it with `pyseer`. This will take a few minutes — there's lots of downloading and installing to be done:
 
 ```{bash include = FALSE}
-docker pull ubuntu:latest
+docker pull ubuntu:19.04
 ```
 
 ```{bash}
