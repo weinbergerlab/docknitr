@@ -1,6 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^vignettes/pyseer-tutorial/.*$
+^vignettes-asis/.*$
 ^doc$
 ^Meta$
 ^rbuild$
