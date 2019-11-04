@@ -1,9 +1,10 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^vignettes/pyseer-tutorial/.*$
+^vignettes-asis/.*$
 ^doc$
 ^Meta$
-^build$
+^rbuild$
 ^gitlab-ci\.yml$
 ^\.dockerignore$
 ^Dockerfile$
