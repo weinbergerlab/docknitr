@@ -17,7 +17,7 @@ docker_engine = function(options) {
   output = ""
   if (options$eval) {
     message(sprintf('running: %s %s', command, paste0(params, collapse=" ")))
-    result = system2(command, params, stdout = outputFile, stderr = outputFile, input = input, env = options$engine.env)
+    result = system2(command, shQuote(params), stdout = outputFile, stderr = outputFile, input = input, env = options$engine.env)
     output = readLines(outputFile)
     if (result != 0) {
       message = sprintf('Error in running command %s %s: %s', command, paste0(params, collapse=" "), paste0(output, collapse="\n"))
