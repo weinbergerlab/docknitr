@@ -14,5 +14,6 @@ RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 Suggests: 
     rmarkdown,
-	R.rsp
+	R.rsp,
+	stringr
 SystemRequirements: Docker
