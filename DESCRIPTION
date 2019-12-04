@@ -9,7 +9,7 @@ Description: Gives you the ability to use arbitrary Docker images
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Depends: knitr
+Depends: knitr, sys
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 Suggests: 
