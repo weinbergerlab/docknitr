@@ -12,6 +12,16 @@ docker_engine = function(options) {
   }
   input = options$code
 
+  # Newline conversion -- NA = leave alone, default = "\n" (UNIX newlines)
+  if (is.null(options$newline)) {
+    options$newline = "\n"
+  }
+  if (!is.na(options$newline)) {
+    input = stringr::str_replace(input, "\r\n", "\n") # Windows -> Unix
+    input = stringr::str_replace(input, "\r", "\n") # Old Mac -> Unix
+    input = stringr::str_replace(input, "\n", options$newline) # Unix -> desired
+  }
+
   # Run docker if options$eval
   outputFile = tempfile()
   output = ""
