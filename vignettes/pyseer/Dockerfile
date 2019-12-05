@@ -11,4 +11,4 @@ RUN apt-get -qq update && apt-get -qq install --yes --no-install-recommends \
   python3-pybedtools \
   mash \
   > /dev/null
-RUN pip3 install --quiet pyseer
+RUN pip3 install --quiet glmnet_py pyseer

@@ -12,22 +12,28 @@ docker_engine = function(options) {
   }
   input = options$code
 
-  # Newline conversion -- NA = leave alone, default = "\n" (UNIX newlines)
-  if (is.null(options$newline)) {
-    options$newline = "\n"
-  }
-  if (!is.na(options$newline)) {
-    input = stringr::str_replace(input, "\r\n", "\n") # Windows -> Unix
-    input = stringr::str_replace(input, "\r", "\n") # Old Mac -> Unix
-    input = stringr::str_replace(input, "\n", options$newline) # Unix -> desired
+  # Newline conversion -- NA = leave alone, NULL = default = "\n" (UNIX newlines)
+  if (is.null(options$input.sep)) {
+    options$input.sep = "\n"
   }
 
   # Run docker if options$eval
+  inputFile = tempfile()
+  on.exit(unlink(inputFile))
+  if (!is.na(options$input.sep)) {
+    con <- file(inputFile, "w+b")
+    writeLines(input, con, sep=options$input.sep)
+    close(con)
+  } else {
+    writeLines(input, inputFile)
+  }
+
   outputFile = tempfile()
+  on.exit(unlink(outputFile))
   output = ""
   if (options$eval) {
     message(sprintf('running: %s %s', command, paste0(params, collapse=" ")))
-    result = system2(command, shQuote(params), stdout = outputFile, stderr = outputFile, input = input, env = options$engine.env)
+    result = sys::exec_wait(command, params, std_out = outputFile, std_err = outputFile, std_in = inputFile)
     output = readLines(outputFile)
     if (result != 0) {
       message = sprintf('Error in running command %s %s: %s', command, paste0(params, collapse=" "), paste0(output, collapse="\n"))
