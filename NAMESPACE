@@ -3,3 +3,4 @@
 export(docker_alias)
 importFrom(knitr,engine_output)
 importFrom(knitr,knit_engines)
+importFrom(rstudioapi,versionInfo)
