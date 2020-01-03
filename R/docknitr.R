@@ -56,7 +56,9 @@ docker_engine = function(options) {
 #'
 #' docker_alias("ubuntu", image="ubuntu:latest", command="bash")
 #'
-#' you can use ```{r engine="ubuntu"} to process Rmarkdown chunks through Ubuntu bash using Docker
+#' you can use ```{ubuntu} to process Rmarkdown chunks through Ubuntu bash using Docker
+#'
+#' The alias name must consist entirely of letters, digits, and underscores, or else `knitr` will not recognize it as a valid code chunk in RMarkdown. 
 #'
 #' @param name The name of a new Docker Rmarkdown engine
 #' @param ... options for the new Docker Rmarkdown engine
@@ -64,6 +66,10 @@ docker_engine = function(options) {
 #' docker_alias("ubuntu", image="ubuntu:latest", command="bash")
 #' @export
 docker_alias = function(name, ...) {
+  if (!any(grep ("^[A-Za-z0-9_]+$", name))) {
+  	warning(sprintf("For best compatibility, your docker alias name should consist entirely of letters, numbers, and underscores; the alias '%s' will not work in R markdown unless you change knitr settings.", name))
+  }
+
   alias_engine = list()
   alias_engine[[name]] = function(options) {
     docker_engine(c(list(...), options))

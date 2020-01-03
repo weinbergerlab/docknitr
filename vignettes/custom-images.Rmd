@@ -128,7 +128,7 @@ docknitr::docker_alias("pyseer", image="pyseer", command="bash", share.files=TRU
 Your next step is probably to run the pyseer tutorial. You can now run the following code (using the `pyseer` Docker image) to download `pyseer_tutorial.tar.bz2` and extract the data files (which takes a while):
 
 ````r
-`r ''````{r engine="pyseer"}
+`r ''````{pyseer}
 mkdir pyseer-tutorial
 cd pyseer-tutorial
 wget --continue --no-verbose --output-document=pyseer_tutorial.tar.bz2 https://ndownloader.figshare.com/files/14091179
@@ -139,7 +139,7 @@ tar xf ../assemblies.tar.bz2
 `r ''````
 ````
 
-```{r engine="pyseer", echo=FALSE}
+```{pyseer, echo=FALSE}
 mkdir pyseer-tutorial
 cd pyseer-tutorial
 wget --continue --no-verbose --output-document=pyseer_tutorial.tar.bz2 https://ndownloader.figshare.com/files/14091179
@@ -152,7 +152,7 @@ tar xf ../assemblies.tar.bz2
 Now you're finally ready to run the first step of data analysis, again using the `pyseer` image in Docker:
 
 ````r
-`r ''````{r engine="pyseer"}
+`r ''````{pyseer}
 cd pyseer-tutorial
 mash sketch -s 10000 -o mash_sketch assemblies/*.fa
 mash dist mash_sketch.msh mash_sketch.msh| square_mash > mash.tsv
@@ -160,7 +160,7 @@ scree_plot_pyseer mash.tsv
 `r ''````
 ````
 
-```{r engine="pyseer", echo=FALSE}
+```{pyseer, echo=FALSE}
 cd pyseer-tutorial
 mash sketch -s 10000 -o mash_sketch assemblies/*.fa
 mash dist mash_sketch.msh mash_sketch.msh | square_mash > mash.tsv

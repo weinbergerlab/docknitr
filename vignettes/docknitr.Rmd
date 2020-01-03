@@ -180,23 +180,25 @@ Let's take a moment to pause here and appreciate what just happened there: your 
 
 You will probably find yourself frequently using the same Docker images and commands over and over again. For example, you may have multiple Rmarkdown blocks that you want to run in Python, without having to repeat the Python Docker options every time.
 
-To accomplish this, use `docknitr::docker_alias`. For example, run this to configure `engine='python-docker'` as shorthand for `engine='docker', image="python:3", share.files=TRUE`:
+To accomplish this, use `docknitr::docker_alias`. For example, run this to configure `python_docker` as shorthand for `docker engine='docker', image="python:3", share.files=TRUE`:
 
 ```{r}
-docknitr::docker_alias("python-docker", image="python:3", share.files=TRUE)
+docknitr::docker_alias("python_docker", image="python:3", share.files=TRUE)
 ```
 
-Now you can use `python-docker` as its own Rmarkdown chunk type:
+Your shorthand has to be recognizable by knitr; by default, this means that it must can’t contain anything other than letters, numbers, and underscores.
+
+Now you can use `python_docker` as its own Rmarkdown chunk type:
 
 ````r
-`r ''````{r engine="python-docker"}
+`r ''````{python_docker}
 import os
 print(os.listdir())
 `r ''````
 ````
 
 
-```{r engine="python-docker", echo=FALSE}
+```{python_docker}
 import os
 print(os.listdir())
 ```
