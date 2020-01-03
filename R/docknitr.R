@@ -50,16 +50,18 @@ docker_engine = function(options) {
   knitr::engine_output(options, options$code, output)
 }
 
-#' Create an alias for a Docker Rmarkdown engine
+#' Create an alias for a Docker R markdown engine
 #'
-#' After writing
-#'     docker_alias("ubuntu", image="ubuntu:latest", command="bash")
-#' you can use ```{ubuntu} to process Rmarkdown chunks through Ubuntu bash using Docker
+#' @details
 #'
-#' The alias name must consist entirely of letters, digits, and underscores, or else `knitr` will not recognize it as a valid code chunk in RMarkdown. 
+#' For example, after writing
+#'   \preformatted{docker_alias("ubuntu", image="ubuntu:latest", command="bash")}
+#' you can use \samp{```\{ubuntu\}} instead of \samp{```\{r engine="docker", image="ubuntu:latest", command="bash"\}} to process R markdown chunks through Ubuntu bash using Docker
 #'
-#' @param name The name of a new Docker Rmarkdown engine
-#' @param ... options for the new Docker Rmarkdown engine
+#' The alias name must consist entirely of letters, digits, and underscores, or else `knitr` will not recognize it as a valid code chunk in R markdown. 
+#'
+#' @param name The name of a new Docker R markdown engine
+#' @param ... Options for the new Docker R markdown engine
 #' @examples
 #' docker_alias("ubuntu", image="ubuntu:latest", command="bash")
 #' @export
