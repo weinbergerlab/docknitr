@@ -136,7 +136,7 @@ print(os.listdir())
 
 These files aren't anywhere (obvious) on your computer — they are *inside the Python 3 Docker image*.
 
-If you want your Rmarkdown Docker blocks to see the normal files on your computer, use the `share.files=TRUE` block option to share your RStudio working directory with the Docker image:
+If you want your Rmarkdown Docker blocks to see the normal files on your computer, use the `share.files=TRUE` block option to share your RStudio working directory with the Docker image. (On Windows, you first have to [share your drives with Docker](https://docs.docker.com/docker-for-windows/#shared-drives) in Docker settings.) For example:
 
 ````r
 `r ''````{r engine="docker", image="python:3", share.files=TRUE}
