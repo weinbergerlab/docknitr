@@ -116,7 +116,7 @@ If you've ever tried to install multiple versions of Python on one computer, you
 
 ### Technical details
 
-Under the hood, `docknitr` uses `system2()` to run `docker run --interactive IMAGE`, and passes the code chunk on the standard input. The standard output is then returned in Rmarkdown output.
+Under the hood, `docknitr` uses `sys::exec_wait()` to run `docker run --interactive IMAGE`, and passes the code chunk on the standard input. The standard output is then returned in Rmarkdown output.
 
 ## File sharing
 
