@@ -1,4 +1,5 @@
 #' @importFrom knitr engine_output knit_engines
+#' @importFrom rstudioapi versionInfo
 
 docker_engine = function(options) {
   command = ifelse(is.null(options$engine.path), "docker", options$engine.path)
@@ -71,6 +72,11 @@ docker_alias = function(name, ...) {
 }
 
 .onLoad = function(libname, pkgname) {
+  rsRequired = "1.2"
+  rsOutdated = tryCatch(rstudioapi::versionInfo()$version < rsRequired, error=function(e) FALSE)
+  if (rsOutdated) {
+  	stop(sprintf("Your RStudio is outdated. Please update to RStudio version %s or later before continuing.", rsRequired))
+  }
   knitr::knit_engines$set(docker=docker_engine)
 }
 

@@ -9,11 +9,11 @@ Description: Gives you the ability to use arbitrary Docker images
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Depends: knitr, sys
+Depends: knitr, sys, rstudioapi
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 Suggests: 
     rmarkdown,
 	R.rsp,
 	stringr
-SystemRequirements: Docker
+SystemRequirements: Docker, RStudio>=1.2
