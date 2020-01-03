@@ -53,9 +53,7 @@ docker_engine = function(options) {
 #' Create an alias for a Docker Rmarkdown engine
 #'
 #' After writing
-#'
-#' docker_alias("ubuntu", image="ubuntu:latest", command="bash")
-#'
+#'     docker_alias("ubuntu", image="ubuntu:latest", command="bash")
 #' you can use ```{ubuntu} to process Rmarkdown chunks through Ubuntu bash using Docker
 #'
 #' The alias name must consist entirely of letters, digits, and underscores, or else `knitr` will not recognize it as a valid code chunk in RMarkdown. 
