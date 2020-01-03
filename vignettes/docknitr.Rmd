@@ -74,7 +74,7 @@ In other words, you can think of a docker image as a pre-built collection of sof
 
 ## Using docker with Rmarkdown
 
-The actual thing we are interested in here is using Docker from inside Rmarkdown. To do this, you first have to load the `docknitr` package:
+The actual thing we are interested in here is using Docker inside Rmarkdown. To do this, you first have to load the `docknitr` package:
 
 ```{r}
 library(docknitr)
