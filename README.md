@@ -3,7 +3,7 @@
 ## Installation
 
 ```r
-devtools::install_url("https://github.com/weinbergerlab/docknitr/releases/download/v0.6.2/docknitr_0.6.2.tar.gz")
+install.packages("docknitr")
 ```
 
 Do not install using `devtools::install_github`!

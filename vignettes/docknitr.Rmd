@@ -74,7 +74,7 @@ In other words, you can think of a docker image as a pre-built collection of sof
 
 ## Using docker with Rmarkdown
 
-The actual thing we are interested in here is using Docker from inside Rmarkdown. To do this, you first have to load the `docknitr` package:
+The actual thing we are interested in here is using Docker inside Rmarkdown. To do this, you first have to load the `docknitr` package:
 
 ```{r}
 library(docknitr)
@@ -116,7 +116,7 @@ If you've ever tried to install multiple versions of Python on one computer, you
 
 ### Technical details
 
-Under the hood, `docknitr` uses `system2()` to run `docker run --interactive IMAGE`, and passes the code chunk on the standard input. The standard output is then returned in Rmarkdown output.
+Under the hood, `docknitr` uses `sys::exec_wait()` to run `docker run --interactive IMAGE`, and passes the code chunk on the standard input. The standard output is then returned in Rmarkdown output.
 
 ## File sharing
 
@@ -136,7 +136,7 @@ print(os.listdir())
 
 These files aren't anywhere (obvious) on your computer — they are *inside the Python 3 Docker image*.
 
-If you want your Rmarkdown Docker blocks to see the normal files on your computer, use the `share.files=TRUE` block option to share your RStudio working directory with the Docker image:
+If you want your Rmarkdown Docker blocks to see the normal files on your computer, use the `share.files=TRUE` block option to share your RStudio working directory with the Docker image. (On Windows, you first have to [share your drives with Docker](https://docs.docker.com/docker-for-windows/#shared-drives) in Docker settings.) For example:
 
 ````r
 `r ''````{r engine="docker", image="python:3", share.files=TRUE}
@@ -180,23 +180,25 @@ Let's take a moment to pause here and appreciate what just happened there: your 
 
 You will probably find yourself frequently using the same Docker images and commands over and over again. For example, you may have multiple Rmarkdown blocks that you want to run in Python, without having to repeat the Python Docker options every time.
 
-To accomplish this, use `docknitr::docker_alias`. For example, run this to configure `engine='python-docker'` as shorthand for `engine='docker', image="python:3", share.files=TRUE`:
+To accomplish this, use `docknitr::docker_alias`. For example, run this to configure `python_docker` as shorthand for `docker engine='docker', image="python:3", share.files=TRUE`:
 
 ```{r}
-docknitr::docker_alias("python-docker", image="python:3", share.files=TRUE)
+docknitr::docker_alias("python_docker", image="python:3", share.files=TRUE)
 ```
 
-Now you can use `python-docker` as its own Rmarkdown chunk type:
+Your shorthand has to be recognizable by knitr; by default, this means that it must can’t contain anything other than letters, numbers, and underscores.
+
+Now you can use `python_docker` as its own Rmarkdown chunk type:
 
 ````r
-`r ''````{r engine="python-docker"}
+`r ''````{python_docker}
 import os
 print(os.listdir())
 `r ''````
 ````
 
 
-```{r engine="python-docker", echo=FALSE}
+```{python_docker}
 import os
 print(os.listdir())
 ```
