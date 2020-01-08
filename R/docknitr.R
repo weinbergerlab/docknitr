@@ -1,5 +1,6 @@
 #' @importFrom knitr engine_output knit_engines
 #' @importFrom rstudioapi versionInfo
+#' @importFrom sys exec_wait
 
 docker_engine = function(options) {
   command = ifelse(is.null(options$engine.path), "docker", options$engine.path)
@@ -58,7 +59,7 @@ docker_engine = function(options) {
 #'   \preformatted{docker_alias("ubuntu", image="ubuntu:latest", command="bash")}
 #' you can use \samp{```\{ubuntu\}} instead of \samp{```\{r engine="docker", image="ubuntu:latest", command="bash"\}} to process R markdown chunks through Ubuntu bash using Docker
 #'
-#' The alias name must consist entirely of letters, digits, and underscores, or else `knitr` will not recognize it as a valid code chunk in R markdown. 
+#' The alias name must consist entirely of letters, digits, and underscores, or else `knitr` will not recognize it as a valid code chunk in R markdown.
 #'
 #' @param name The name of a new Docker R markdown engine
 #' @param ... Options for the new Docker R markdown engine
